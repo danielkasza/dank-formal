@@ -17,10 +17,7 @@ class CoverBranchesTransform extends Transform with DependencyAPIMigration {
     def needsCover(s: Statement): Boolean = {
         var r = false
         s match {
-            case EmptyStmt =>
-            case _: Verification =>
-            case _: Print =>
-            case _: Stop =>
+            case EmptyStmt | _: Verification | _:Print | _:Stop =>
             case _: Conditionally => s.foreachStmt(r |= needsCover(_))
             case _: Block => s.foreachStmt(r |= needsCover(_))
             case _ => r = true
