@@ -9,8 +9,8 @@ lazy val commonSettings = Seq(
   ),
   libraryDependencies += "org.scala-lang" % "scala-reflect" % scalaVersion.value,
   addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.full),
-  libraryDependencies += "edu.berkeley.cs" %% "chisel3" % "3.5-SNAPSHOT",
-  libraryDependencies += "org.scalatest" %% "scalatest" % "3.1.4",
+  libraryDependencies += "edu.berkeley.cs" %% "chisel3" % "3.4.1",
+  libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.8",
 )
 
 lazy val main = (project in file(".")).
