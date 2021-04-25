@@ -9,11 +9,12 @@ lazy val commonSettings = Seq(
   ),
   libraryDependencies += "org.scala-lang" % "scala-reflect" % scalaVersion.value,
   addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.full),
-  libraryDependencies += "edu.berkeley.cs" %% "chisel3" % "3.4.1",
-  libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.8",
+  libraryDependencies += "edu.berkeley.cs" %% "chisel3" % "3.4.3",
+  libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.6",
 )
 
 lazy val main = (project in file(".")).
   settings(name := "dank-formal").
   settings(commonSettings: _*)
 
+scalacOptions += "-language:reflectiveCalls"

@@ -1,7 +1,7 @@
 package dank.formal.test.assumefalse
 
 import dank.formal._
-import org.scalatest._
+import org.scalatest.flatspec.AnyFlatSpec
 import chisel3._
 
 class AssumeFalseModule extends CoveredFormalModule {
@@ -18,7 +18,7 @@ class AssumeFalseModule extends CoveredFormalModule {
     }
 }
 
-class Smoketest extends FlatSpec with FormalTester {
+class Smoketest extends AnyFlatSpec with FormalTester {
     behavior of "AssumeFalseModule"
 
     cover(new AssumeFalseModule)

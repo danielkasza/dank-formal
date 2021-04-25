@@ -2,7 +2,7 @@ package dank.formal.test.assertionfailure
 
 import dank.formal._
 import dank.formal.sby._
-import org.scalatest._
+import org.scalatest.flatspec.AnyFlatSpec
 import chisel3._
 
 class ModuleWithBadAssertion extends FormalModule {
@@ -30,7 +30,7 @@ class ModuleWithBadAssertion extends FormalModule {
     assert(aReg && bReg)
 }
 
-class AssertionFailureTest extends FlatSpec {
+class AssertionFailureTest extends AnyFlatSpec {
     behavior of "SbyRun"
 
     it should "detect assertion failures when proving" in {

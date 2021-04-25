@@ -1,18 +1,18 @@
 package dank.formal
 
 import dank.formal.sby._
-import org.scalatest._
+import org.scalatest.flatspec.AnyFlatSpec
 import scala.reflect._
 
 /** Trait used to simplify running formal verification. */
-trait FormalTester { this: FlatSpec =>
+trait FormalTester { this: AnyFlatSpec =>
     /** Counter used to give each test a unique name. */
     private var counter = 0
 
     /** Generate basename for new test. */
     private def getTestName() = {
         val name = this.suiteName + ":" + counter.toString
-        counter += 1
+        counter = counter + 1
         name
     }
 

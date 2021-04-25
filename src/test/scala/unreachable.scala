@@ -2,7 +2,7 @@ package dank.formal.test.unreachable
 
 import dank.formal._
 import dank.formal.sby._
-import org.scalatest._
+import org.scalatest.flatspec.AnyFlatSpec
 import chisel3._
 
 class ModuleWithUnreachaleStatements extends CoveredFormalModule {
@@ -21,7 +21,7 @@ class ModuleWithUnreachaleStatements extends CoveredFormalModule {
     }
 }
 
-class UnreachableTest extends FlatSpec {
+class UnreachableTest extends AnyFlatSpec {
     behavior of "SbyRun"
 
     it should "detect uncovered branches" in {
