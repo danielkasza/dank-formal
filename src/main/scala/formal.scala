@@ -77,7 +77,7 @@ abstract class FormalModule extends Module {
         ShiftRegister(signal, cycles)
     }
 
-    /** Get a pas value of a signal, or the default value.
+    /** Get a past value of a signal, or the default value.
       * Unlike the other "past" method, this one checks the number of cycles since reset and returns a default value if
       * there was a reset between now and the past value requested.
       */
