@@ -51,15 +51,11 @@ class SbyRun[T<:FormalModule](gen: => T, mode: String, depth: Int = 20, base: St
 
     /* Run SymbiYosys and grab outputs. */
     val process = new ProcessBuilder("sby", "-f", "-d", jobname+"/sby", jobname+".sby").start()
-    val rc = process.waitFor()
     val stdout = Source.fromInputStream(process.getInputStream())
     
-    /* Start gathering errors by checking the return code. */
+    /* Start gathering errors. */
     val errors = new ArrayBuffer[String]
-    if (rc != 0) {
-        errors.append("Sby failed, return code: " + rc.toString)
-    }
-
+    
     /** Helper function for recording errors that occurred on a specific source line. */
     private def record_error(error: String, location: String, step: Int = -1) {
         val sv_file_name = location.split(":")(0)
@@ -73,16 +69,16 @@ class SbyRun[T<:FormalModule](gen: => T, mode: String, depth: Int = 20, base: St
         } else {
             "@[unknown]"
         }
-
+        
         val error_string =
-            scala_location +
-            "(" + sv_file_name + ":" + sv_line_num.toString + ") " +
-            error +
-            (if (step == -1) { "" } else {" (step " + step.toString + ")"})
-
+        scala_location +
+        "(" + sv_file_name + ":" + sv_line_num.toString + ") " +
+        error +
+        (if (step == -1) { "" } else {" (step " + step.toString + ")"})
+        
         errors.append(error_string)
     }
-
+    
     /* Find all errors. */
     for (line <- stdout.getLines()) {
         if (line.contains("Unreached cover statement at")) {
@@ -100,6 +96,13 @@ class SbyRun[T<:FormalModule](gen: => T, mode: String, depth: Int = 20, base: St
         }
     }
     
+    // Wait for process and check return code.
+    if (rc != 0) {
+        errors.append("Sby failed, return code: " + rc.toString)
+    }
+    val rc = process.waitFor()
+    stdout.close()
+
     /** Throws an exception iff there were errors in the run. */
     def throwErrors() {
         if (errors.length != 0) {
