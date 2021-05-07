@@ -8,6 +8,7 @@ import chisel3.util.HasBlackBoxInline
 import chisel3.experimental.{ChiselAnnotation, RunFirrtlTransform, annotate, verification}
 import chisel3.internal.sourceinfo.SourceInfo
 import firrtl.annotations.PresetAnnotation
+import firrtl.transforms.NoDedupAnnotation
 
 /** Add cover statements to branches.
   * 
@@ -104,6 +105,12 @@ class ResetDetector extends MultiIOModule {
       resetDoneReg := true.B
     }
   }
+
+  /* Dedup removes the PresetAnnotation, so disallow it. */
+  val module = this
+  annotate(new ChiselAnnotation {
+    override def toFirrtl = NoDedupAnnotation(module.toTarget)
+  })
 }
 
 abstract class CoveredFormalModule extends FormalModule with CoverBranches
