@@ -35,18 +35,8 @@ trait DoNotCoverBranches { m: chisel3.Module =>
 
 /** Chisel Module with formal verification. */
 abstract class FormalModule extends Module {
-    val _reset_done = Wire(Bool())
-    val _preset = WireInit(false.B.asAsyncReset())
-    annotate(new ChiselAnnotation {
-      override def toFirrtl = PresetAnnotation(_preset.toTarget)
-    })
-    withReset(_preset) {
-      val resetDoneReg = RegInit(false.B)
-      _reset_done := resetDoneReg
-      when(reset.asBool()) {
-        resetDoneReg := true.B
-      }
-    }
+    val _reset_detector = Module(new ResetDetector)
+    val _reset_done = dontTouch(WireInit(_reset_detector.resetDone))
 
     /** Add an assert verification statement. */
     def assert(predicate: Bool, msg: String = "")(implicit sourceInfo: SourceInfo, compileOptions: CompileOptions): Unit = {
@@ -98,6 +88,22 @@ abstract class FormalModule extends Module {
         }
         r
     }
+}
+
+
+class ResetDetector extends MultiIOModule {
+  val resetDone = IO(Output(Bool()))
+  val preset = WireInit(false.B.asAsyncReset())
+  annotate(new ChiselAnnotation {
+    override def toFirrtl = PresetAnnotation(preset.toTarget)
+  })
+  withReset(preset) {
+    val resetDoneReg = RegInit(false.B)
+    resetDone := resetDoneReg
+    when(reset.asBool()) {
+      resetDoneReg := true.B
+    }
+  }
 }
 
 abstract class CoveredFormalModule extends FormalModule with CoverBranches
